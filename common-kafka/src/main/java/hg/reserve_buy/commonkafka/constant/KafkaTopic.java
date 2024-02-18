@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class KafkaTopic {
-    public final static String ORDER_PAYED = "ORDER_PAYED";
-    public final static String ORDER_CANCELED = "ORDER_CANCELED";
+    public final static String ORDER_CREATED = "ORDER.CREATED";
+    public final static String ORDER_PAYED = "ORDER.PAYED";
+    public final static String ORDER_CANCELED = "ORDER.CANCELED";
 }
