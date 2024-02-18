@@ -33,7 +33,7 @@ import static hg.reserve_buy.itemserviceapi.core.entity.ItemEntity.createTimeDea
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
-public class IntegrationTest {
+public abstract class IntegrationTest {
     @Autowired
     ItemRepository itemRepository;
     @Autowired
