@@ -38,11 +38,12 @@ class ItemServiceImplTest {
     EntityManager em;
 
     Random r = new Random();
-
+    LocalDateTime currentDate;
     List<ItemInfoEntity> savedItemInfoEntities = new ArrayList<>();
 
     @BeforeEach
     void beforeEach() {
+        currentDate = LocalDateTime.of(2019, 5, 7, 1, 1, 1, 0);
         int itemCount = 10;
 
         for (int i = 0; i < itemCount; i++) {
@@ -113,11 +114,12 @@ class ItemServiceImplTest {
     }
 
     private ItemInfoEntity createMockItemInfoEntity() {
+
         boolean isTimeDeal = (r.nextInt(2) & 1) == 1;
         ItemEntity itemEntity;
         if (isTimeDeal) {
             itemEntity = createTimeDeal(
-                    createRandomUUID(), r.nextInt(100000), now().plusMinutes(r.nextInt(10))
+                    createRandomUUID(), r.nextInt(100000), currentDate.plusMinutes(r.nextInt(10))
             );
         } else {
             itemEntity = createGeneral(
@@ -150,6 +152,7 @@ class ItemServiceImplTest {
                 itemEntity.getStartAt()
         );
     }
+
     private ItemDetailDto parseEntityToDetail(ItemInfoEntity itemInfoEntity) {
         return new ItemDetailDto(
                 itemInfoEntity.getItemEntity().getItemNumber(),
