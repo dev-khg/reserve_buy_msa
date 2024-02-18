@@ -7,5 +7,9 @@ dependencies {
 
     implementation project(':common-service-data')
 
+    implementation 'org.redisson:redisson-spring-boot-starter:3.17.4'
+
+    testImplementation "org.apache.maven.plugins:maven-surefire-plugin:3.1.2"
+
     runtimeOnly 'com.h2database:h2'
 }
