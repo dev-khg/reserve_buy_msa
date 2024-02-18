@@ -1,5 +1,6 @@
 rootProject.name = 'reserve_buy'
 
-include 'item-service-api'
 include 'common-service-data'
+include 'item-service-api'
+include 'order-service-api'
 include 'eureka-service'
