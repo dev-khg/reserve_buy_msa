@@ -1,4 +1,4 @@
-package hg.reserve_buy.itemserviceapi.core;
+package hg.reserve_buy.itemserviceapi.core.entity;
 
 public enum ItemType {
     GENERAL,

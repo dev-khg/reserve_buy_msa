@@ -1,11 +1,9 @@
-package hg.reserve_buy.itemserviceapi.core;
+package hg.reserve_buy.itemserviceapi.core.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -47,7 +45,7 @@ public class ItemEntity {
 
         return itemEntity;
     }
-    
+
     public static ItemEntity createTimeDeal(String name, int price, LocalDateTime startAt) {
         ItemEntity itemEntity = new ItemEntity();
         itemEntity.name = name;
