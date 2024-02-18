@@ -105,7 +105,7 @@ class StockServiceImplTest {
         @DisplayName("재고 증가: 동시성 요청시 정상적으로 재고가 반영되어야 한다.")
         void success_get_stock_increase() throws InterruptedException {
             // given
-            StockEntity stockEntity = generateStockEntity(1L, 100);
+            StockEntity stockEntity = generateStockEntity(199L, 100);
 
             int numberOfThreads = 10;
             ExecutorService executorService = Executors.newFixedThreadPool(numberOfThreads);
@@ -129,7 +129,7 @@ class StockServiceImplTest {
         @DisplayName("재고 감소: 동시성 요청시 정상적으로 재고가 반영되어야 한다.")
         void success_get_stock_decrease() throws InterruptedException {
             // given
-            StockEntity stockEntity = generateStockEntity(2L, 100);
+            StockEntity stockEntity = generateStockEntity(200L, 100);
 
             int numberOfThreads = 10;
             ExecutorService executorService = Executors.newFixedThreadPool(numberOfThreads);
