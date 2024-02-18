@@ -5,6 +5,7 @@ import hg.reserve_buy.itemserviceapi.core.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -20,5 +21,10 @@ public class ItemRepositoryImpl implements ItemRepository {
     @Override
     public Optional<ItemEntity> findByItemNumber(Long itemNumber) {
         return itemJpaRepository.findById(itemNumber);
+    }
+
+    @Override
+    public List<ItemEntity> findAll() {
+        return itemJpaRepository.findAll();
     }
 }
