@@ -12,6 +12,9 @@ redis:
   price:
     host: localhost
     port: 6380
+  time-deal:
+    host: localhost
+    port: 6381
 
 eureka:
   client:
