@@ -8,19 +8,17 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-@Component
 @RequiredArgsConstructor
-public class RedisKeyValueStorage implements KeyValueStorage {
-    private final RedisTemplate<String, Integer> redisTemplate;
+public class RedisKeyValueStorage<K, V> implements KeyValueStorage<K, V> {
+    private final RedisTemplate<K, V> redisTemplate;
 
     @Override
-    public Optional<Integer> getValue(String key) {
+    public Optional<V> getValue(K key) {
         return Optional.ofNullable(redisTemplate.opsForValue().get(key));
     }
 
-    // TODO : 분산락 고려 필요.
     @Override
-    public void putValue(String key, Integer value, int timeout, TimeUnit timeUnit) {
+    public void putValue(K key, V value, int timeout, TimeUnit timeUnit) {
         redisTemplate.opsForValue().set(key, value, timeout, timeUnit);
     }
 }

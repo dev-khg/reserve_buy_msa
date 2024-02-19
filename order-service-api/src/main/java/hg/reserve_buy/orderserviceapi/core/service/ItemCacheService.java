@@ -1,6 +1,7 @@
 package hg.reserve_buy.orderserviceapi.core.service;
 
 import hg.reserve_buy.commonredis.lock.DistributionLock;
+import hg.reserve_buy.commonredis.timedeal.RedisTimeDealKey;
 import hg.reserve_buy.orderserviceapi.core.repository.KeyValueStorage;
 import hg.reserve_buy.orderserviceapi.external.ItemFeignClient;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +14,8 @@ import static hg.reserve_buy.commonredis.price.RedisLockKey.*;
 
 @Service
 @RequiredArgsConstructor
-public class ItemPriceService {
-    private final KeyValueStorage keyValueStorage;
+public class ItemCacheService {
+    private final KeyValueStorage<String, Integer> keyValueStorage;
     private final ItemPriceAdapter itemPriceAdapter;
 
     public Integer getPrice(Long itemNumber) {
@@ -28,11 +29,17 @@ public class ItemPriceService {
         return price;
     }
 
+    public boolean isTimeDeal(Long itemNumber) {
+        String key = RedisTimeDealKey.TIME_DEAL_PREFIX + itemNumber;
+
+        return false;
+    }
+
     @Component
     @RequiredArgsConstructor
     static class ItemPriceAdapter {
         private final ItemFeignClient itemFeignClient;
-        private final KeyValueStorage keyValueStorage;
+        private final KeyValueStorage<String, Integer> keyValueStorage;
 
         @DistributionLock(prefix = ITEM_PRICE_PREFIX, key = "#itemNumber")
         public Integer requestPrice(Long itemNumber) {

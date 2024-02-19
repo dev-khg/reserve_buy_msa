@@ -3,9 +3,9 @@ package hg.reserve_buy.orderserviceapi.core.repository;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-public interface KeyValueStorage {
+public interface KeyValueStorage<K, V> {
 
-    Optional<Integer> getValue(String key);
+    Optional<V> getValue(K key);
 
-    void putValue(String key, Integer value, int timeout, TimeUnit timeUnit);
+    void putValue(K key, V value, int timeout, TimeUnit timeUnit);
 }

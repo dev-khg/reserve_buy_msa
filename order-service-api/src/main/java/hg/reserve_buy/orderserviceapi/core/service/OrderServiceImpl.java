@@ -4,6 +4,7 @@ import com.example.orderserviceevent.event.OrderPayedEvent;
 import com.example.orderserviceevent.event.OrderReserveEvent;
 import hg.reserve_buy.commonservicedata.exception.BadRequestException;
 import hg.reserve_buy.orderserviceapi.core.entity.OrderEntity;
+import hg.reserve_buy.orderserviceapi.core.repository.KeyValueStorage;
 import hg.reserve_buy.orderserviceapi.core.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,12 +19,13 @@ import static hg.reserve_buy.orderserviceapi.core.entity.OrderStatus.*;
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderProducerService orderProducerService;
-    private final ItemPriceService itemPriceService;
+    private final ItemCacheService itemCacheService;
     private final PayService payService;
+    private final KeyValueStorage<String, String> keyValueStorage;
 
     @Override
     public String reserveOrder(Long userNumber, Long itemNumber, Integer count) {
-        Integer unitPrice = itemPriceService.getPrice(itemNumber);
+        Integer unitPrice = itemCacheService.getPrice(itemNumber);
         int totalPrice = unitPrice * count;
 
         if (!payService.isPayable(userNumber, totalPrice)) {
