@@ -1,3 +1,9 @@
+server:
+  port: 0
+
+spring:
+  application:
+    name: order-service
 
 redis:
   lock:
@@ -6,3 +12,10 @@ redis:
   price:
     host: localhost
     port: 6380
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    fetch-registry: false
+    register-with-eureka: true

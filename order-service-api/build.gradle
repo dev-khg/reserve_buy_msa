@@ -13,5 +13,10 @@ dependencies {
 
 	implementation 'org.springframework.kafka:spring-kafka'
 
+	// open-feign
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
 	runtimeOnly 'com.h2database:h2'
 }
