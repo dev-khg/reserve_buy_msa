@@ -1,0 +1,5 @@
+
+redis:
+  price:
+    host: localhost
+    port: 6380

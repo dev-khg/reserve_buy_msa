@@ -10,4 +10,8 @@ public abstract class KafkaProducer {
     public void publish(String topic, Object data) {
         kafkaTemplate.send(topic, data);
     }
+
+    public void publish(String key, String topic, Object data) {
+        kafkaTemplate.send(topic, key, data);
+    }
 }
