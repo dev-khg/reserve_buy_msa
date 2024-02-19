@@ -1,4 +1,4 @@
-package hg.reserve_buy.commonredis.config;
+package hg.reserve_buy.commonredis.lock;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;

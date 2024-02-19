@@ -1,5 +1,6 @@
 dependencies {
     implementation project(':common-service-data')
+    implementation project(':common-redis')
     implementation project(':common-kafka')
     implementation project(':order-service-event')
 

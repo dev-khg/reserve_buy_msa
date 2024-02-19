@@ -1,13 +1,11 @@
 package hg.reserve_buy.stockserviceapi.core.service;
 
+import hg.reserve_buy.commonredis.lock.DistributionLock;
 import hg.reserve_buy.commonservicedata.exception.BadRequestException;
 import hg.reserve_buy.stockserviceapi.core.entity.StockEntity;
 import hg.reserve_buy.stockserviceapi.core.repository.StockRepository;
-import hg.reserve_buy.stockserviceapi.infrastructure.lock.DistributionLock;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor

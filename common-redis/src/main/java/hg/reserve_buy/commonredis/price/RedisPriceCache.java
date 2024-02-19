@@ -1,4 +1,4 @@
-package hg.reserve_buy.commonredis.config;
+package hg.reserve_buy.commonredis.price;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
