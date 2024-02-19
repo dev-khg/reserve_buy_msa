@@ -14,5 +14,7 @@ dependencies {
 
     implementation 'org.redisson:redisson-spring-boot-starter:3.17.4'
 
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
     runtimeOnly 'com.h2database:h2'
 }
