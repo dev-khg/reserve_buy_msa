@@ -13,17 +13,17 @@ import java.util.Optional;
 import java.util.Random;
 
 import static hg.reserve_buy.commonredis.price.RedisLockKey.*;
-import static hg.reserve_buy.orderserviceapi.core.service.ItemPriceService.*;
+import static hg.reserve_buy.orderserviceapi.core.service.ItemCacheService.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-class ItemPriceServiceTest {
+class ItemCacheServiceTest {
     @InjectMocks
-    ItemPriceService itemPriceService;
+    ItemCacheService itemCacheService;
 
     @Mock
-    KeyValueStorage keyValueStorage;
+    KeyValueStorage<String, Integer> keyValueStorage;
     @Mock
     ItemPriceAdapter itemPriceAdapter;
     @Mock
@@ -46,7 +46,7 @@ class ItemPriceServiceTest {
                 .thenReturn(ApiResponse.success(random));
 
         // then
-        assertEquals(random, itemPriceService.getPrice(itemNumber));
+        assertEquals(random, itemCacheService.getPrice(itemNumber));
 
         verify(keyValueStorage, times(1))
                 .getValue(key);
@@ -65,6 +65,6 @@ class ItemPriceServiceTest {
                 .thenReturn(Optional.ofNullable(random));
 
         // then
-        assertEquals(random, itemPriceService.getPrice(itemNumber));
+        assertEquals(random, itemCacheService.getPrice(itemNumber));
     }
 }

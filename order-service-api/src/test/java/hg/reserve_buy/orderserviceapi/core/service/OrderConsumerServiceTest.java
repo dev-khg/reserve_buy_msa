@@ -6,6 +6,8 @@ import com.example.orderserviceevent.event.OrderReserveEvent;
 import hg.reserve_buy.orderserviceapi.core.entity.OrderEntity;
 import hg.reserve_buy.orderserviceapi.core.entity.OrderStatus;
 import hg.reserve_buy.orderserviceapi.core.repository.OrderRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -23,6 +25,8 @@ class OrderConsumerServiceTest {
     OrderConsumerService orderConsumerService;
     @Autowired
     OrderRepository orderRepository;
+    @PersistenceContext
+    EntityManager em;
 
     @Test
     @DisplayName("주문 예약 이벤트 발생시 정상적으로 디비에 저장되어야 한다.")
