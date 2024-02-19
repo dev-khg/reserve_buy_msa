@@ -103,7 +103,7 @@ class ItemServiceImplTest {
 
     @Test
     @DisplayName("존재하지 않는 아이템 조회시 예외가 반환되어야 한다.")
-    public void failure_find_item_detail() {
+    void failure_find_item_detail() {
         // given
 
         // when
@@ -111,6 +111,36 @@ class ItemServiceImplTest {
         //then
         assertThatThrownBy(() -> itemService.getItemDetail(Long.MAX_VALUE))
                 .isInstanceOf(BadRequestException.class);
+    }
+
+    @Test
+    @DisplayName("존재하는 아이템 가격 조회시 정상적으로 조회되어야 한다.")
+    void success_inquiry_item_price() {
+        // given
+        List<ItemEntity> itemEntities = savedItemInfoEntities.stream()
+                .map(ItemInfoEntity::getItemEntity)
+                .toList();
+
+        for (ItemEntity itemEntity : itemEntities) {
+            // when
+            Integer foundPrice = itemService.getItemPrice(itemEntity.getItemNumber());
+
+            // then
+            assertEquals(foundPrice, itemEntity.getPrice());
+        }
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 아이템 가격 조회시 예외가 발생되어야 한다.")
+    void failure_inquiry_item_price_not_exists_item() {
+        // given
+
+        // when
+
+        // then
+        assertThatThrownBy(() ->
+                itemService.getItemPrice(Long.MAX_VALUE)
+        ).isInstanceOf(BadRequestException.class);
     }
 
     private ItemInfoEntity createMockItemInfoEntity() {

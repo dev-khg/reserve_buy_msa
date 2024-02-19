@@ -2,6 +2,7 @@ package hg.reserve_buy.itemserviceapi.presentation;
 
 import hg.reserve_buy.commonservicedata.response.ApiResponse;
 import hg.reserve_buy.itemserviceapi.IntegrationTest;
+import hg.reserve_buy.itemserviceapi.core.entity.ItemEntity;
 import hg.reserve_buy.itemserviceapi.core.entity.ItemInfoEntity;
 import hg.reserve_buy.itemserviceapi.core.service.dto.ItemBriefDto;
 import hg.reserve_buy.itemserviceapi.core.service.dto.ItemDetailDto;
@@ -97,4 +98,37 @@ class ItemControllerTest extends IntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andReturn();
     }
+
+    @Test
+    @DisplayName("존재하지 않는 아이템 가격 조회시 예외가 반환되어야 한다.")
+    void failure_find_item_price() throws Exception {
+        // given
+        Long notExistsPriceNumber = Long.MAX_VALUE;
+
+        // when
+        mockMvc.perform(get("/" + notExistsPriceNumber + "/price"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("존재하는 아이템 가격 조회시 정상적으로 조회되어야 한다.")
+    void success_find_item_price() throws Exception {
+        // given
+        List<ItemEntity> itemEntities = savedItemInfoEntities.stream()
+                .map(ItemInfoEntity::getItemEntity)
+                .toList();
+
+        for (ItemEntity itemEntity : itemEntities) {
+            // when
+            MvcResult mvcResult = mockMvc.perform(get("/" + itemEntity.getItemNumber() + "/price"))
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            Integer priceResponse = readResponseJsonBody(mvcResult.getResponse().getContentAsString(), Integer.class);
+
+            // then
+            assertEquals(priceResponse, itemEntity.getPrice());
+        }
+    }
+
 }
