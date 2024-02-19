@@ -23,7 +23,7 @@ class ItemCacheServiceTest {
     ItemCacheService itemCacheService;
 
     @Mock
-    KeyValueStorage keyValueStorage;
+    KeyValueStorage<String, Integer> keyValueStorage;
     @Mock
     ItemPriceAdapter itemPriceAdapter;
     @Mock

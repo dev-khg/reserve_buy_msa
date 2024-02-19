@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.core.RedisTemplate;
 
 @Configuration
-@Import({RedisPriceCacheConfig.class, RedisLockConfig.class, RedisTimeDealCacheConfig.class})
+@ComponentScan(basePackageClasses = {RedisPriceCacheConfig.class, RedisLockConfig.class, RedisTimeDealCacheConfig.class})
 @EnableAutoConfiguration(exclude = {RedisRepositoriesAutoConfiguration.class})
 public class RedisConfig {
 
