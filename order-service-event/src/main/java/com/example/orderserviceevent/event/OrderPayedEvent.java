@@ -8,4 +8,6 @@ import lombok.*;
 @ToString
 public class OrderPayedEvent {
     private String orderId;
+    private Long itemNumber;
+    private Integer count;
 }

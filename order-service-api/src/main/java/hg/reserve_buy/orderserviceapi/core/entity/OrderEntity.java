@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static hg.reserve_buy.orderserviceapi.core.entity.OrderStatus.*;
+
 @Entity
 @Table(name = "_order")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -30,15 +32,14 @@ public class OrderEntity {
     private OrderStatus status;
 
     public static OrderEntity create(
-            String orderId, Long itemNumber, Long userNumber, Integer unitPrice, Integer count, OrderStatus status
-    ) {
+            String orderId, Long itemNumber, Long userNumber, Integer unitPrice, Integer count) {
         OrderEntity orderEntity = new OrderEntity();
         orderEntity.orderId = orderId;
         orderEntity.itemNumber = itemNumber;
         orderEntity.userNumber = userNumber;
         orderEntity.unitPrice = unitPrice;
         orderEntity.count = count;
-        orderEntity.status = status;
+        orderEntity.status = RESERVED;
 
         return orderEntity;
     }
