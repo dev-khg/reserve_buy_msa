@@ -34,6 +34,12 @@ public class ItemServiceImpl implements ItemService {
         return parseEntityToDetail(itemInfoEntity);
     }
 
+    @Override
+    public Integer getItemPrice(Long itemNumber) {
+        ItemEntity itemEntity = getItemEntity(itemNumber);
+        return itemEntity.getPrice();
+    }
+
     private ItemBriefDto parseEntityToBrief(ItemEntity itemEntity) {
         return new ItemBriefDto(
                 itemEntity.getItemNumber(),
@@ -58,6 +64,12 @@ public class ItemServiceImpl implements ItemService {
     private ItemInfoEntity getItemInfoEntity(Long itemNumber) {
         return itemInfoRepository.findByItemNumberFJItem(itemNumber).orElseThrow(
                 () -> new BadRequestException("Not exists item.")
+        );
+    }
+
+    private ItemEntity getItemEntity(Long itemNumber) {
+        return itemRepository.findByItemNumber(itemNumber).orElseThrow(
+                () -> new BadRequestException("Not exists item")
         );
     }
 }

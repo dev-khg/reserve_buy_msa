@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static hg.reserve_buy.commonservicedata.response.ApiResponse.*;
+
 @RestController
 @RequiredArgsConstructor
 public class ItemController {
@@ -18,11 +20,16 @@ public class ItemController {
 
     @GetMapping
     public ApiResponse<List<ItemBriefDto>> getItems() {
-        return ApiResponse.success(itemService.getItemList());
+        return success(itemService.getItemList());
     }
 
     @GetMapping("/{itemNumber}")
     public ApiResponse<ItemDetailDto> getItemDetail(@PathVariable Long itemNumber) {
-        return ApiResponse.success(itemService.getItemDetail(itemNumber));
+        return success(itemService.getItemDetail(itemNumber));
+    }
+
+    @GetMapping("/{itemNumber}/price")
+    public ApiResponse<Integer> getItemPrice(@PathVariable Long itemNumber) {
+        return success(itemService.getItemPrice(itemNumber));
     }
 }

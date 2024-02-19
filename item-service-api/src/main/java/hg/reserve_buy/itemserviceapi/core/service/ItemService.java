@@ -9,4 +9,6 @@ public interface ItemService {
     List<ItemBriefDto> getItemList();
 
     ItemDetailDto getItemDetail(Long itemNumber);
+
+    Integer getItemPrice(Long itemNumber);
 }
