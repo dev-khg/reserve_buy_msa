@@ -4,7 +4,8 @@ import com.example.orderserviceevent.event.OrderCancelEvent;
 import com.example.orderserviceevent.event.OrderPayedEvent;
 import com.example.orderserviceevent.event.OrderReserveEvent;
 import hg.reserve_buy.commonkafka.constant.KafkaTopic;
-import hg.reserve_buy.commonservicedata.exception.BadRequestException;
+import hg.reserve_buy.commonredis.lock.DistributionLock;
+import hg.reserve_buy.commonredis.price.RedisLockKey;
 import hg.reserve_buy.commonservicedata.exception.InternalServerException;
 import hg.reserve_buy.orderserviceapi.core.entity.OrderEntity;
 import hg.reserve_buy.orderserviceapi.core.entity.OrderStatus;
@@ -26,17 +27,15 @@ public class OrderConsumerService {
         orderRepository.save(orderEntity);
     }
 
-    // TODO : 분산락 적용 필요
-    @Transactional
     @KafkaListener(topics = KafkaTopic.ORDER_PAYED, groupId = GROUP_ID)
+    @DistributionLock(prefix = RedisLockKey.ORDER_PREFIX, key = "#event.orderId")
     public void handleOrderPayed(OrderPayedEvent event) {
         OrderEntity orderEntity = getOrderEntity(event.getOrderId());
         orderEntity.changeStatus(OrderStatus.PAYED);
     }
 
-    // TODO : 분산락 적용 필요
-    @Transactional
     @KafkaListener(topics = KafkaTopic.ORDER_CANCELED, groupId = GROUP_ID)
+    @DistributionLock(prefix = RedisLockKey.ORDER_PREFIX, key = "#event.orderId")
     public void handleOrderCanceled(OrderCancelEvent event) {
         OrderEntity orderEntity = getOrderEntity(event.getOrderId());
         orderEntity.changeStatus(OrderStatus.CANCELED);
