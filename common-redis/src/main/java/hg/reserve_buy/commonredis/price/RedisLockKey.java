@@ -4,7 +4,8 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ItemRedisKey {
+public final class RedisLockKey {
 
     public static final String ITEM_PRICE_PREFIX = "ITEM:PRICE:";
+    public static final String ORDER_PREFIX = "ORDER:";
 }
