@@ -9,6 +9,8 @@ services :
     restart: always
     networks:
       - shop-mysql-network
+    ports:
+      - '8761:8761'
     healthcheck:
       test: "curl --fail --silent localhost:8761/actuator/health | grep UP || exit 1"
       interval: 5s
