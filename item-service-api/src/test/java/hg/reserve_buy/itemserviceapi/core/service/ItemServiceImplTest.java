@@ -1,20 +1,28 @@
 package hg.reserve_buy.itemserviceapi.core.service;
 
+import hg.reserve_buy.commonkafka.constant.KafkaTopic;
 import hg.reserve_buy.commonservicedata.exception.BadRequestException;
 import hg.reserve_buy.itemserviceapi.core.entity.ItemEntity;
 import hg.reserve_buy.itemserviceapi.core.entity.ItemInfoEntity;
+import hg.reserve_buy.itemserviceapi.core.entity.ItemType;
 import hg.reserve_buy.itemserviceapi.core.repository.ItemInfoRepository;
 import hg.reserve_buy.itemserviceapi.core.repository.ItemRepository;
 import hg.reserve_buy.itemserviceapi.core.service.dto.ItemBriefDto;
 import hg.reserve_buy.itemserviceapi.core.service.dto.ItemDetailDto;
+import hg.reserve_buy.itemserviceapi.init.InitData;
+import hg.reserve_buy.itemserviceapi.presentation.request.ItemCreateRequest;
+import hg.reserve_order.itemserviceevent.event.ItemCreatedEvent;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import org.apache.kafka.clients.producer.KafkaProducer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -24,16 +32,22 @@ import static hg.reserve_buy.itemserviceapi.core.entity.ItemEntity.*;
 import static java.time.LocalDateTime.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @Transactional
 class ItemServiceImplTest {
+
+    @MockBean
+    InitData initData;
     @Autowired
     ItemRepository itemRepository;
     @Autowired
     ItemInfoRepository itemInfoRepository;
     @Autowired
     ItemServiceImpl itemService;
+    @MockBean
+    ItemProducerService itemProducerService;
     @PersistenceContext
     EntityManager em;
 
@@ -141,6 +155,72 @@ class ItemServiceImplTest {
         assertThatThrownBy(() ->
                 itemService.getItemPrice(Long.MAX_VALUE)
         ).isInstanceOf(BadRequestException.class);
+    }
+
+    @Test
+    @DisplayName("일반 아이템 생성 요청시 정상적으로 디비에 반영되어야 한다.")
+    void success_general_item_create_request() {
+        // given
+        ItemCreateRequest request = new ItemCreateRequest(
+                createRandomUUID(),
+                r.nextInt(1, 10000),
+                r.nextInt(1, 10000),
+                ItemType.GENERAL,
+                null,
+                createRandomUUID()
+        );
+
+        // when
+        Long itemNumber = itemService.createItem(request);
+        ItemCreatedEvent itemCreatedEvent = createItemCreateEvent(request, itemNumber);
+
+        // then
+        ItemInfoEntity itemInfoEntity = itemInfoRepository.findByItemNumberFJItem(itemNumber).orElseThrow();
+
+        assertEquals(itemNumber, itemInfoEntity.getItemEntity().getItemNumber());
+        assertEquals(request.getName(), itemInfoEntity.getItemEntity().getName());
+        assertEquals(request.getStartAt(), itemInfoEntity.getItemEntity().getStartAt());
+        assertEquals(request.getType(), itemInfoEntity.getItemEntity().getType());
+        assertEquals(request.getPrice(), itemInfoEntity.getItemEntity().getPrice());
+        assertEquals(request.getDescription(), itemInfoEntity.getContent());
+
+        verify(itemProducerService, times(1))
+                .publish(String.valueOf(itemNumber), KafkaTopic.ITEM_CREATED,  itemCreatedEvent);
+    }
+
+    @Test
+    @DisplayName("선착순 아이템 생성 요청시 정상적으로 디비에 반영되어야 한다.")
+    void success_time_deal_item_create_request() {
+        // given
+        ItemCreateRequest request = new ItemCreateRequest(
+                createRandomUUID(),
+                r.nextInt(1, 10000),
+                r.nextInt(1, 10000),
+                ItemType.TIME_DEAL,
+                now(),
+                createRandomUUID()
+        );
+
+        // when
+        Long itemNumber = itemService.createItem(request);
+        ItemCreatedEvent itemCreatedEvent = createItemCreateEvent(request, itemNumber);
+
+        // then
+        ItemInfoEntity itemInfoEntity = itemInfoRepository.findByItemNumberFJItem(itemNumber).orElseThrow();
+
+        assertEquals(itemNumber, itemInfoEntity.getItemEntity().getItemNumber());
+        assertEquals(request.getName(), itemInfoEntity.getItemEntity().getName());
+        assertEquals(request.getStartAt(), itemInfoEntity.getItemEntity().getStartAt());
+        assertEquals(request.getType(), itemInfoEntity.getItemEntity().getType());
+        assertEquals(request.getPrice(), itemInfoEntity.getItemEntity().getPrice());
+        assertEquals(request.getDescription(), itemInfoEntity.getContent());
+
+        verify(itemProducerService, times(1))
+                .publish(String.valueOf(itemNumber), KafkaTopic.ITEM_CREATED,  itemCreatedEvent);
+    }
+
+    private ItemCreatedEvent createItemCreateEvent(ItemCreateRequest request, Long itemNumber) {
+        return new ItemCreatedEvent(itemNumber, request.getStock(), request.getType().name(), request.getStartAt());
     }
 
     private ItemInfoEntity createMockItemInfoEntity() {
