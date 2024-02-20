@@ -10,6 +10,7 @@ import hg.reserve_buy.itemserviceapi.core.repository.ItemRepository;
 import hg.reserve_buy.itemserviceapi.core.service.ItemServiceImpl;
 import hg.reserve_buy.itemserviceapi.core.service.dto.ItemBriefDto;
 import hg.reserve_buy.itemserviceapi.core.service.dto.ItemDetailDto;
+import hg.reserve_buy.itemserviceapi.init.InitData;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Disabled;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +36,8 @@ import static hg.reserve_buy.itemserviceapi.core.entity.ItemEntity.createTimeDea
 @SpringBootTest
 @AutoConfigureMockMvc
 public abstract class IntegrationTest {
+    @MockBean
+    InitData initData;
     @Autowired
     ItemRepository itemRepository;
     @Autowired
