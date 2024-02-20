@@ -1,6 +1,21 @@
 version : '3.9'
 services :
 
+# ----------- SERVER ------------
+  eureka-server:
+    build:
+      context: ./eureka-service
+      dockerfile: Dockerfile
+    restart: always
+    networks:
+      - shop-mysql-network
+    healthcheck:
+      test: "curl --fail --silent localhost:8761/actuator/health | grep UP || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
 # ------------ REDIS ------------
   redis-lock:
     image: redis:latest
@@ -25,7 +40,7 @@ services :
       - shop-mysql-network
 
 
-  # ------------ KAFKA ------------
+# ------------ KAFKA ------------
   zookeeper:
     image: wurstmeister/zookeeper:3.4.6
     ports:
