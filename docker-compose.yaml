@@ -8,7 +8,7 @@ services :
       dockerfile: Dockerfile
     restart: always
     networks:
-      - shop-mysql-network
+      - shop-network
     ports:
       - '8761:8761'
     healthcheck:
@@ -25,21 +25,21 @@ services :
     ports:
       - '6379:6379'
     networks:
-      - shop-mysql-network
+      - shop-network
   redis-item-price-cache:
     image: redis:latest
     restart: always
     ports:
       - '6380:6379'
     networks:
-      - shop-mysql-network
+      - shop-network
   redis-time-deal:
     image: redis:latest
     restart: always
     ports:
       - '6381:6379'
     networks:
-      - shop-mysql-network
+      - shop-network
 
 
 # ------------ KAFKA ------------
@@ -48,7 +48,7 @@ services :
     ports:
       - "2181:2181"
     networks:
-      - shop-mysql-network
+      - shop-network
   kafka-service:
     image: wurstmeister/kafka
     ports:
@@ -62,9 +62,9 @@ services :
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
-      - shop-mysql-network
+      - shop-network
     depends_on:
       - zookeeper
 networks:
-  shop-mysql-network:
+  shop-network:
     driver: bridge
