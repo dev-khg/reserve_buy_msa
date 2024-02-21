@@ -1,6 +1,27 @@
 spring:
   application:
     name: order-service
+  kafka:
+    bootstrap-servers: 127.0.0.1:9092
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3307/order-db
+    username: sa
+    password: 1234
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        show_sql: true
+        use_sql_comments: false
+        format_sql: true
+  sql:
+    init:
+      mode: always
+
 
 redis:
   lock:

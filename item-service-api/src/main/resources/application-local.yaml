@@ -1,16 +1,26 @@
 spring:
   application:
     name: item-service
+  kafka:
+    bootstrap-servers: 127.0.0.1:9092
+
   datasource:
-    driverClassName: org.h2.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/item-db
+    username: sa
+    password: 1234
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
         show_sql: true
-        use_sql_comments: true
+        use_sql_comments: false
         format_sql: true
+  sql:
+    init:
+      mode: always
   jackson:
     default-property-inclusion: non_null
 eureka:

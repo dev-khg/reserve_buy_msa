@@ -8,7 +8,7 @@ spring:
     password: ${ORDER_DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
@@ -17,6 +17,10 @@ spring:
         format_sql: false
   kafka:
     bootstrap-servers: ${KAFKA_SERVER_URL}
+  sql:
+    init:
+      mode: always
+
 redis:
   lock:
     host: ${REDIS_LOCK_HOST}

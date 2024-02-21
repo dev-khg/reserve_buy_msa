@@ -17,6 +17,9 @@ spring:
         show_sql: false
         use_sql_comments: false
         format_sql: false
+  sql:
+    init:
+      mode: always
 redis:
   lock:
     host: ${REDIS_LOCK_HOST}
