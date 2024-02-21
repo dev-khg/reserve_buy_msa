@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: item-service
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVER_URL}
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${ITEM_DB_URL}
+    username: ${ITEM_DB_USERNAME}
+    password: ${ITEM_DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        show_sql: false
+        use_sql_comments: false
+        format_sql: false
+  jackson:
+    default-property-inclusion: non_null
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${DISCOVERY_SERVER_URL}
+    fetch-registry: false
+    register-with-eureka: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
