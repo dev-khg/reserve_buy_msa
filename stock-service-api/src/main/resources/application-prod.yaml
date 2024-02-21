@@ -3,6 +3,12 @@ spring:
     name: stock-service
   kafka:
     bootstrap-servers: ${KAFKA_SERVER_URL}
+    consumer:
+      properties:
+        spring:
+          json:
+            trusted:
+              package: '*'
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${STOCK_DB_URL}

@@ -1,8 +1,10 @@
+
 spring:
   application:
     name: item-service
   kafka:
     bootstrap-servers: 127.0.0.1:9092
+
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -35,3 +37,5 @@ management:
     web:
       exposure:
         include: health
+server:
+  port: 8081
