@@ -23,7 +23,7 @@ public class InitData implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         List<ItemCreateRequest> itemRequestList = List.of(
-                createGeneralItem("즉석밥"), createGeneralItem("라먄"), createGeneralItem("커피"),
+                createGeneralItem("즉석밥"), createGeneralItem("라면"), createGeneralItem("커피"),
                 createGeneralItem("신발"), createGeneralItem("즉석밥"),
                 createTimeDealItem("아이폰"), createTimeDealItem("맥북")
         );

@@ -21,20 +21,20 @@ public class OrderConsumerService {
     private final static String GROUP_ID = "order-service";
     private final OrderRepository orderRepository;
 
-    @KafkaListener(topics = KafkaTopic.ORDER_RESERVED, groupId = GROUP_ID)
+    @KafkaListener(topics = KafkaTopic.ORDER_RESERVED, groupId = GROUP_ID, containerFactory = "kafkaContainerFactory")
     public void handleOrderReserve(OrderReserveEvent event) {
         OrderEntity orderEntity = createOrderEntity(event);
         orderRepository.save(orderEntity);
     }
 
-    @KafkaListener(topics = KafkaTopic.ORDER_PAYED, groupId = GROUP_ID)
+    @KafkaListener(topics = KafkaTopic.ORDER_PAYED, groupId = GROUP_ID, containerFactory = "kafkaContainerFactory")
     @DistributionLock(prefix = RedisLockKey.ORDER_PREFIX, key = "#event.orderId")
     public void handleOrderPayed(OrderPayedEvent event) {
         OrderEntity orderEntity = getOrderEntity(event.getOrderId());
         orderEntity.changeStatus(OrderStatus.PAYED);
     }
 
-    @KafkaListener(topics = KafkaTopic.ORDER_CANCELED, groupId = GROUP_ID)
+    @KafkaListener(topics = KafkaTopic.ORDER_CANCELED, groupId = GROUP_ID, containerFactory = "kafkaContainerFactory")
     @DistributionLock(prefix = RedisLockKey.ORDER_PREFIX, key = "#event.orderId")
     public void handleOrderCanceled(OrderCancelEvent event) {
         OrderEntity orderEntity = getOrderEntity(event.getOrderId());
