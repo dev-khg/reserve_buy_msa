@@ -10,7 +10,7 @@ spring:
     password: ${ITEM_DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
@@ -19,6 +19,9 @@ spring:
         format_sql: false
   jackson:
     default-property-inclusion: non_null
+  sql:
+    init:
+      mode: always
 
 eureka:
   client:
