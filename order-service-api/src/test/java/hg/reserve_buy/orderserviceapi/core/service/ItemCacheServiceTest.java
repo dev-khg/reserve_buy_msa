@@ -3,12 +3,14 @@ package hg.reserve_buy.orderserviceapi.core.service;
 import hg.reserve_buy.commonservicedata.response.ApiResponse;
 import hg.reserve_buy.orderserviceapi.core.repository.KeyValueStorage;
 import hg.reserve_buy.orderserviceapi.external.ItemFeignClient;
+import hg.reserve_order.itemserviceevent.api.ItemCacheResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
 
@@ -36,20 +38,18 @@ class ItemCacheServiceTest {
         Long itemNumber = 1L;
         int random = new Random().nextInt(10000);
         String key = ITEM_PRICE_PREFIX + itemNumber;
+        ItemCacheResponse cacheResponse
+                = new ItemCacheResponse(itemNumber, random, "TIME_DEAL", LocalDateTime.now());
 
         // when
         when(keyValueStorage.getValue(key))
                 .thenReturn(Optional.empty());
-        when(itemPriceAdapter.requestPrice(itemNumber))
-                .thenReturn(random);
-        when(itemFeignClient.getItemPrice(itemNumber))
-                .thenReturn(ApiResponse.success(random));
+        when(itemPriceAdapter.getItemCache(itemNumber))
+                .thenReturn(cacheResponse);
 
         // then
-        assertEquals(random, itemCacheService.getPrice(itemNumber));
-
-        verify(keyValueStorage, times(1))
-                .getValue(key);
+        Integer price = itemCacheService.getPrice(itemNumber);
+        assertEquals(random, price);
     }
 
     @Test
@@ -59,10 +59,14 @@ class ItemCacheServiceTest {
         Long itemNumber = 1L;
         int random = new Random().nextInt(10000);
         String key = ITEM_PRICE_PREFIX + itemNumber;
+        ItemCacheResponse cacheResponse
+                = new ItemCacheResponse(itemNumber, random, "TIME_DEAL", LocalDateTime.now());
 
         // when
         when(keyValueStorage.getValue(key))
                 .thenReturn(Optional.ofNullable(random));
+        when(itemPriceAdapter.getItemCache(itemNumber))
+                .thenReturn(cacheResponse);
 
         // then
         assertEquals(random, itemCacheService.getPrice(itemNumber));

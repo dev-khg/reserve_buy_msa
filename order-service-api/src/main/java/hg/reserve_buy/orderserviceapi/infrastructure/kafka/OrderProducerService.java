@@ -1,4 +1,4 @@
-package hg.reserve_buy.orderserviceapi.core.service;
+package hg.reserve_buy.orderserviceapi.infrastructure.kafka;
 
 import hg.reserve_buy.commonkafka.config.KafkaProducer;
 import org.springframework.kafka.core.KafkaTemplate;

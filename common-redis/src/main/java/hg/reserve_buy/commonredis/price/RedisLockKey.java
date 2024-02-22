@@ -7,5 +7,6 @@ import lombok.NoArgsConstructor;
 public final class RedisLockKey {
 
     public static final String ITEM_PRICE_PREFIX = "ITEM:PRICE:";
+    public static final String ITEM_JOIN_PREFIX = "ITEM:JOIN:";
     public static final String ORDER_PREFIX = "ORDER:";
 }

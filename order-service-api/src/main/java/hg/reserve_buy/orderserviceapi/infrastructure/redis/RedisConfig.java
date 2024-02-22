@@ -19,8 +19,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class RedisConfig {
 
     @Bean
-    public KeyValueStorage<String, Integer> priceKeyValueStorage(
-            @Qualifier("priceRedisTemplate") RedisTemplate<String, Integer> redisTemplate) {
+    public KeyValueStorage<String, Object> priceKeyValueStorage(
+            @Qualifier("priceRedisTemplate") RedisTemplate<String, Object> redisTemplate) {
         return new RedisKeyValueStorage<>(redisTemplate);
     }
 

@@ -3,6 +3,7 @@ dependencies {
 	implementation project(':common-kafka')
 	implementation project(':common-redis')
 	implementation project(':order-service-event')
+	implementation project(':item-service-event')
 
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
