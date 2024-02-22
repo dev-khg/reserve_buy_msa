@@ -34,7 +34,7 @@ class ItemControllerTest extends IntegrationTest {
                 .toList();
 
         // when
-        MvcResult mvcResult = mockMvc.perform(get("/"))
+        MvcResult mvcResult = mockMvc.perform(get("/item"))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -69,7 +69,7 @@ class ItemControllerTest extends IntegrationTest {
         for (int i = 0; i < savedLength; i++) {
             // when
             ItemDetailDto savedDetail = savedDetails.get(i);
-            MvcResult mvcResult = mockMvc.perform(get("/" + savedDetail.getItemNumber()))
+            MvcResult mvcResult = mockMvc.perform(get("/item/" + savedDetail.getItemNumber()))
                     .andExpect(status().isOk())
                     .andReturn();
 
@@ -94,7 +94,7 @@ class ItemControllerTest extends IntegrationTest {
         // when
 
         // then
-        mockMvc.perform(get("/" + Long.MAX_VALUE))
+        mockMvc.perform(get("/item/" + Long.MAX_VALUE))
                 .andExpect(status().isBadRequest())
                 .andReturn();
     }
@@ -106,7 +106,7 @@ class ItemControllerTest extends IntegrationTest {
         Long notExistsPriceNumber = Long.MAX_VALUE;
 
         // when
-        mockMvc.perform(get("/" + notExistsPriceNumber + "/price"))
+        mockMvc.perform(get("/item/" + notExistsPriceNumber + "/price"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -120,7 +120,7 @@ class ItemControllerTest extends IntegrationTest {
 
         for (ItemEntity itemEntity : itemEntities) {
             // when
-            MvcResult mvcResult = mockMvc.perform(get("/" + itemEntity.getItemNumber() + "/price"))
+            MvcResult mvcResult = mockMvc.perform(get("/item/" + itemEntity.getItemNumber() + "/price"))
                     .andExpect(status().isOk())
                     .andReturn();
 
