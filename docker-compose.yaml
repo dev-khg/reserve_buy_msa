@@ -35,6 +35,8 @@ services :
       timeout: 5s
       retries: 5
       start_period: 40s
+    ports:
+      - '8000:8000'
 
   item-server:
     build:
@@ -54,10 +56,12 @@ services :
     depends_on:
       item-mysql:
         condition: service_healthy
+      stock-server:
+        condition: service_healthy
 
   order-server:
     build:
-      context: ./item-service-api
+      context: ./order-service-api
       dockerfile: Dockerfile
     restart: always
     env_file:
