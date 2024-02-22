@@ -47,7 +47,7 @@ public abstract class IntegrationTest {
     @Autowired
     protected MockMvc mockMvc;
     @Autowired
-    ObjectMapper objectMapper;
+    protected ObjectMapper objectMapper;
     @PersistenceContext
     EntityManager em;
 

@@ -6,6 +6,7 @@ import hg.reserve_buy.itemserviceapi.core.entity.ItemEntity;
 import hg.reserve_buy.itemserviceapi.core.entity.ItemInfoEntity;
 import hg.reserve_buy.itemserviceapi.core.service.dto.ItemBriefDto;
 import hg.reserve_buy.itemserviceapi.core.service.dto.ItemDetailDto;
+import hg.reserve_order.itemserviceevent.api.ItemCacheResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MvcResult;
@@ -128,6 +129,31 @@ class ItemControllerTest extends IntegrationTest {
 
             // then
             assertEquals(priceResponse, itemEntity.getPrice());
+        }
+    }
+
+    @Test
+    @DisplayName("주문용 아이템 캐시 조회시 정상적으로 조회되어야 한다.")
+    void success_order_cache() throws Exception {
+        // given
+        List<ItemEntity> itemEntities = savedItemInfoEntities.stream()
+                .map(ItemInfoEntity::getItemEntity)
+                .toList();
+
+        for (ItemEntity itemEntity : itemEntities) {
+            // when
+            MvcResult mvcResult = mockMvc.perform(get("/item/" + itemEntity.getItemNumber() + "/cache"))
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            ItemCacheResponse cacheResponse
+                    = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ItemCacheResponse.class);
+
+            // then
+            assertEquals(itemEntity.getItemNumber(), cacheResponse.getItemNumber());
+            assertEquals(itemEntity.getType().name(), cacheResponse.getType());
+            assertEquals(itemEntity.getPrice(), cacheResponse.getPrice());
+            assertEquals(itemEntity.getStartAt(), cacheResponse.getStartAt());
         }
     }
 

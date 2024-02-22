@@ -9,6 +9,7 @@ import hg.reserve_buy.itemserviceapi.core.repository.ItemRepository;
 import hg.reserve_buy.itemserviceapi.core.service.dto.ItemBriefDto;
 import hg.reserve_buy.itemserviceapi.core.service.dto.ItemDetailDto;
 import hg.reserve_buy.itemserviceapi.presentation.request.ItemCreateRequest;
+import hg.reserve_order.itemserviceevent.api.ItemCacheResponse;
 import hg.reserve_order.itemserviceevent.event.ItemCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -59,6 +60,16 @@ public class ItemServiceImpl implements ItemService {
         );
 
         return itemEntity.getItemNumber();
+    }
+
+    @Override
+    public ItemCacheResponse getOrderCache(Long itemNumber) {
+        ItemEntity itemEntity = getItemEntity(itemNumber);
+        return entityToCacheResponse(itemEntity);
+    }
+
+    private ItemCacheResponse entityToCacheResponse(ItemEntity itemEntity) {
+        return new ItemCacheResponse(itemEntity.getItemNumber(), itemEntity.getPrice(), itemEntity.getType().name(), itemEntity.getStartAt());
     }
 
     private ItemBriefDto parseEntityToBrief(ItemEntity itemEntity) {

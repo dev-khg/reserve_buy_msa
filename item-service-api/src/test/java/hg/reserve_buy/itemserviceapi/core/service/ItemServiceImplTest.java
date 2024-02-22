@@ -11,15 +11,13 @@ import hg.reserve_buy.itemserviceapi.core.service.dto.ItemBriefDto;
 import hg.reserve_buy.itemserviceapi.core.service.dto.ItemDetailDto;
 import hg.reserve_buy.itemserviceapi.init.InitData;
 import hg.reserve_buy.itemserviceapi.presentation.request.ItemCreateRequest;
+import hg.reserve_order.itemserviceevent.api.ItemCacheResponse;
 import hg.reserve_order.itemserviceevent.event.ItemCreatedEvent;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -217,6 +215,22 @@ class ItemServiceImplTest {
 
         verify(itemProducerService, times(1))
                 .publish(String.valueOf(itemNumber), KafkaTopic.ITEM_CREATED,  itemCreatedEvent);
+    }
+
+    @Test
+    @DisplayName("주문용 캐시 조회시 정상적으로 반환되어야 한다.")
+    void success_order_cache_response() {
+        // given
+        ItemEntity savedItemEntity = savedItemInfoEntities.get(0).getItemEntity();
+
+        // when
+        ItemCacheResponse cacheResponse = itemService.getOrderCache(savedItemEntity.getItemNumber());
+
+        // then
+        assertEquals(cacheResponse.getItemNumber(), savedItemEntity.getItemNumber());
+        assertEquals(cacheResponse.getType(), savedItemEntity.getType().name());
+        assertEquals(cacheResponse.getStartAt(), savedItemEntity.getStartAt());
+        assertEquals(cacheResponse.getPrice(), savedItemEntity.getPrice());
     }
 
     private ItemCreatedEvent createItemCreateEvent(ItemCreateRequest request, Long itemNumber) {
