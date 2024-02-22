@@ -6,6 +6,7 @@ import hg.reserve_buy.commonservicedata.exception.BadRequestException;
 import hg.reserve_buy.orderserviceapi.core.entity.OrderEntity;
 import hg.reserve_buy.orderserviceapi.core.repository.KeyValueStorage;
 import hg.reserve_buy.orderserviceapi.core.repository.OrderRepository;
+import hg.reserve_buy.orderserviceapi.infrastructure.kafka.OrderProducerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,6 @@ public class OrderServiceImpl implements OrderService {
     private final OrderProducerService orderProducerService;
     private final ItemCacheService itemCacheService;
     private final PayService payService;
-    private final KeyValueStorage<String, String> keyValueStorage;
 
     @Override
     public String reserveOrder(Long userNumber, Long itemNumber, Integer count) {
@@ -30,6 +30,8 @@ public class OrderServiceImpl implements OrderService {
 
         if (!payService.isPayable(userNumber, totalPrice)) {
             throw new BadRequestException("Not enough money.");
+        } else if(!itemCacheService.isOpen(itemNumber)) {
+            throw new BadRequestException("현재 판매중인 아이템이 아닙니다.");
         }
 
         String orderId = UUID.randomUUID().toString();

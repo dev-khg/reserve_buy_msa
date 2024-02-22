@@ -6,6 +6,7 @@ import com.example.orderserviceevent.event.OrderReserveEvent;
 import hg.reserve_buy.orderserviceapi.core.entity.OrderEntity;
 import hg.reserve_buy.orderserviceapi.core.entity.OrderStatus;
 import hg.reserve_buy.orderserviceapi.core.repository.OrderRepository;
+import hg.reserve_buy.orderserviceapi.infrastructure.kafka.OrderConsumerService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;

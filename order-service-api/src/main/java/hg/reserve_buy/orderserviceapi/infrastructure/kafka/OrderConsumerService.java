@@ -1,4 +1,4 @@
-package hg.reserve_buy.orderserviceapi.core.service;
+package hg.reserve_buy.orderserviceapi.infrastructure.kafka;
 
 import com.example.orderserviceevent.event.OrderCancelEvent;
 import com.example.orderserviceevent.event.OrderPayedEvent;
