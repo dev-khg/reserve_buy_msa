@@ -20,7 +20,7 @@ class StockControllerTest extends IntegrationTest {
         // given
 
         // when
-        mockMvc.perform(get("/" + Long.MAX_VALUE))
+        mockMvc.perform(get("/stock/" + Long.MAX_VALUE))
                 .andExpect(status().isBadRequest());
 
         // then
@@ -33,7 +33,7 @@ class StockControllerTest extends IntegrationTest {
         StockEntity stockEntity = savedEntity;
 
         // when
-        MvcResult mvcResult = mockMvc.perform(get("/" + savedEntity.getItemNumber()))
+        MvcResult mvcResult = mockMvc.perform(get("/stock/" + savedEntity.getItemNumber()))
                 .andExpect(status().isOk())
                 .andReturn();
 
