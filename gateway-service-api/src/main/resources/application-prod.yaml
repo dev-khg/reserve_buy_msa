@@ -19,24 +19,17 @@ spring:
             preLogger: true
             postLogger: true
       routes:
-        - id: not-allowed-item-path
-          uri: no://op
-          predicates:
-            - Path=/item/*/price
-            - Method=*
-          filters:
-            - SetStatus=404
         - id: item-service-api
           uri: lb://ITEM-SERVICE
           predicates:
-            - Path=/item,/item/**
+            - Path=/api/item,/api/item/{segment}
             - Method=GET
           filters:
-            - RewritePath=/item/(?<segment>.*), /$\{segment}
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
         - id: stock-service-api
           uri: lb://STOCK-SERVICE
           predicates:
-            - Path=/stock/**
+            - Path=/api/stock/{segment}
             - Method=GET
           filters:
-            - RewritePath=/stock/(?<segment>.*), /$\{segment}
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
