@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class RedisKey {
 
-    public static final String ITEM_PRICE_PREFIX = "ITEM:PRICE:";
     public static final String ITEM_JOIN_PREFIX = "ITEM:JOIN:";
     public static final String ORDER_PREFIX = "ORDER:";
     public static final String REDIS_STOCK_PREFIX = "STOCK:";
