@@ -31,6 +31,9 @@ redis:
   time-deal:
     host: ${REDIS_TIMEDEAL_HOST}
     port: ${REDIS_TIMEDEAL_PORT}
+  stock:
+    host: ${REDIS_STOCK_HOST}
+    port: ${REDIS_STOCK_PORT}
 
 eureka:
   client:

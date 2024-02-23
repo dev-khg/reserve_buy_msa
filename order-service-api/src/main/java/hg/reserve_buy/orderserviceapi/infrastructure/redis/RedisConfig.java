@@ -16,7 +16,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 @Configuration
 @ComponentScan(basePackageClasses =
-        {RedisPriceCacheConfig.class, RedisLockConfig.class, RedisTimeDealCacheConfig.class}
+        {RedisPriceCacheConfig.class, RedisLockConfig.class, RedisTimeDealCacheConfig.class, RedisStockCacheConfig.class}
 )
 @EnableAutoConfiguration(exclude = {RedisRepositoriesAutoConfiguration.class})
 public class RedisConfig {
@@ -28,8 +28,14 @@ public class RedisConfig {
     }
 
     @Bean
-    public KeyValueStorage<String, Integer> timeDealKeyValueStorage(
-            @Qualifier("timeDealRedisTemplate") RedisTemplate<String, Integer> redisTemplate) {
+    public KeyValueStorage<String, String> timeDealKeyValueStorage(
+            @Qualifier("timeDealRedisTemplate") RedisTemplate<String, String> redisTemplate) {
+        return new RedisKeyValueStorage<>(redisTemplate);
+    }
+
+    @Bean
+    public KeyValueStorage<String, Integer> stockKeyValueStorage(
+            @Qualifier("stockRedisTemplate") RedisTemplate<String, Integer> redisTemplate) {
         return new RedisKeyValueStorage<>(redisTemplate);
     }
 }
