@@ -32,9 +32,4 @@ public class RedisConfig {
             @Qualifier("timeDealRedisTemplate") RedisTemplate<String, Integer> redisTemplate) {
         return new RedisKeyValueStorage<>(redisTemplate);
     }
-
-//    @Bean
-//    public KeyValueStorage<String, Integer> timeDealKeyValueProxy(RedisKeyValueStorage<String, Integer> keyValueStorage) {
-//        return new RedisExecutorProxy<>(keyValueStorage);
-//    }
 }
