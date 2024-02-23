@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 
-import static hg.reserve_buy.commonredis.price.RedisLockKey.*;
+import static hg.reserve_buy.commonredis.lock.RedisKey.*;
 
 @Service
 @RequiredArgsConstructor
@@ -24,11 +24,15 @@ public class ItemCacheService {
         return itemCache.getPrice();
     }
 
-    public boolean isOpen(Long itemNumber) {
+    public boolean isTimeDeal(Long itemNumber) {
         ItemCacheResponse itemCacheResponse = getItemCacheResponse(itemNumber);
 
-        return itemCacheResponse.getType().equals("TIME_DEAL")
-                && itemCacheResponse.getStartAt().isAfter(LocalDateTime.now());
+        return itemCacheResponse.getType().equals("TIME_DEAL");
+    }
+
+    public boolean isOpen(Long itemNumber) {
+        ItemCacheResponse itemCacheResponse = getItemCacheResponse(itemNumber);
+        return itemCacheResponse.getStartAt().isAfter(LocalDateTime.now());
     }
 
     public void refreshCache(Long itemNumber, ItemCacheResponse itemCache) {
