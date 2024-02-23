@@ -22,9 +22,9 @@ public class RedisTimeDealCacheConfig {
     }
 
     @Bean
-    public RedisTemplate<String, Integer> timeDealRedisTemplate(
+    public RedisTemplate<String, String> timeDealRedisTemplate(
             @Qualifier("redisTimeDealConnectionFactory") RedisConnectionFactory factory) {
-        final RedisTemplate<String, Integer> redisTemplate = new RedisTemplate<>();
+        final RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(factory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new StringRedisSerializer());

@@ -25,6 +25,9 @@ redis:
   time-deal:
     host: localhost
     port: 6381
+  stock:
+    host: localhost
+    port: 6382
 
 eureka:
   client:

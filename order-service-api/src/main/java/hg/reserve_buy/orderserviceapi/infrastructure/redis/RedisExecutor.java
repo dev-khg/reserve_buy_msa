@@ -1,6 +1,5 @@
 package hg.reserve_buy.orderserviceapi.infrastructure.redis;
 
-import hg.reserve_buy.commonredis.timedeal.RedisTimeDealScripts;
 import hg.reserve_buy.orderserviceapi.core.repository.KeyValueStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -13,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
-public class RedisExecutorProxy {
+public class RedisExecutor {
     private final RedisTemplate<String, Integer> redisTemplate;
     private final KeyValueStorage<String, Integer> keyValueStorage;
 
