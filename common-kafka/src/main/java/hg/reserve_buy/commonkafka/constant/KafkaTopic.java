@@ -14,4 +14,8 @@ public final class KafkaTopic {
 
     // Publisher : ITEM
     public final static String ITEM_CREATED = "ITEM.CREATED";
+    public final static String ITEM_RESERVE_TIME = "ITEM.RESERVED.STOCK";
+    public final static String ITEM_CANCELED_TIME = "ITEM.CANCELED.STOCK";
+
+    // Publisher : STOCK
 }

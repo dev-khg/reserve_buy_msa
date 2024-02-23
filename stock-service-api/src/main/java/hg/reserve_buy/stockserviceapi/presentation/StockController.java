@@ -20,4 +20,9 @@ public class StockController {
     public ApiResponse<Integer> getStock(@PathVariable Long itemNumber) {
         return success(stockService.getStockByItemNumber(itemNumber));
     }
+
+    @GetMapping("/{itemNumber}/cache")
+    public Integer getStockCache(@PathVariable Long itemNumber) {
+        return stockService.getStockByItemNumberWithLock(itemNumber);
+    }
 }

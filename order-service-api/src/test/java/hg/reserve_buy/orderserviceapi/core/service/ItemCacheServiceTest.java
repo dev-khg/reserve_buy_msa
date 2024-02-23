@@ -1,6 +1,5 @@
 package hg.reserve_buy.orderserviceapi.core.service;
 
-import hg.reserve_buy.commonservicedata.response.ApiResponse;
 import hg.reserve_buy.orderserviceapi.core.repository.KeyValueStorage;
 import hg.reserve_buy.orderserviceapi.external.ItemFeignClient;
 import hg.reserve_order.itemserviceevent.api.ItemCacheResponse;
@@ -14,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
 
-import static hg.reserve_buy.commonredis.price.RedisLockKey.*;
+import static hg.reserve_buy.commonredis.lock.RedisKey.*;
 import static hg.reserve_buy.orderserviceapi.core.service.ItemCacheService.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
