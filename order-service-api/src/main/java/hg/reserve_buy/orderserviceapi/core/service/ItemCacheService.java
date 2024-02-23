@@ -32,11 +32,11 @@ public class ItemCacheService {
 
     public boolean isOpen(Long itemNumber) {
         ItemCacheResponse itemCacheResponse = getItemCacheResponse(itemNumber);
-        return itemCacheResponse.getStartAt().isAfter(LocalDateTime.now());
+        return itemCacheResponse.getStartAt().isBefore(LocalDateTime.now());
     }
 
     public void refreshCache(Long itemNumber, ItemCacheResponse itemCache) {
-        String key = ITEM_PRICE_PREFIX + itemNumber;
+        String key = ITEM_JOIN_PREFIX + itemNumber;
         keyValueStorage.putValue(key, itemCache, 10, TimeUnit.MINUTES);
     }
 
