@@ -1,18 +1,28 @@
 package hg.reserve_buy.orderserviceapi.core.service;
 
+import com.example.orderserviceevent.event.OrderPayedEvent;
 import com.example.orderserviceevent.event.OrderReserveEvent;
 import hg.reserve_buy.commonkafka.constant.KafkaTopic;
 import hg.reserve_buy.commonservicedata.exception.BadRequestException;
+import hg.reserve_buy.orderserviceapi.core.entity.OrderEntity;
+import hg.reserve_buy.orderserviceapi.core.entity.OrderStatus;
+import hg.reserve_buy.orderserviceapi.core.repository.OrderRepository;
 import hg.reserve_buy.orderserviceapi.infrastructure.kafka.OrderProducerService;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.Random;
+import java.util.UUID;
 
 import static hg.reserve_buy.commonkafka.constant.KafkaTopic.*;
 import static org.assertj.core.api.Assertions.*;
@@ -31,6 +41,8 @@ class OrderServiceImplTest {
     StockCacheService stockCacheService;
     @MockBean
     OrderProducerService orderProducerService;
+    @MockBean
+    OrderRepository orderRepository;
 
     Random r = new Random();
 
@@ -144,5 +156,77 @@ class OrderServiceImplTest {
                 .reserveStock(orderId, itemNumber, count);
         verify(orderProducerService, times(1))
                 .publish(eq(orderId), eq(ORDER_RESERVED), any());
+    }
+
+    @Test
+    @DisplayName("권한이 없는 유저가 주문 요청시 예외가 반환되어야 한다.")
+    void failure_order_not_has_auth_user() {
+        // given
+        Long orderUserNumber = r.nextLong(1, 100);
+        String orderId = UUID.randomUUID().toString();
+        OrderEntity mock = createMockBean(orderUserNumber, OrderStatus.RESERVED);
+
+        // when
+        when(orderRepository.findById(orderId))
+                .thenReturn(Optional.ofNullable(mock));
+
+        // then
+        assertThatThrownBy(() -> orderService.order(orderUserNumber + 1, orderId))
+                .isInstanceOf(BadRequestException.class);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OrderStatus.class)
+    @DisplayName("유저가 주문 요청시 이미 결제됬거나, 취소됐다면 예외를 반환한다.")
+    void failure_order_status_is_invalid(OrderStatus status) {
+        // given
+        if (status == OrderStatus.RESERVED) {
+            return;
+        }
+        Long orderUserNumber = r.nextLong(1, 100);
+        String orderId = UUID.randomUUID().toString();
+        OrderEntity mock = createMockBean(orderUserNumber, status);
+
+        // when
+        when(orderRepository.findById(orderId))
+                .thenReturn(Optional.ofNullable(mock));
+
+        // then
+        assertThatThrownBy(() -> orderService.order(orderUserNumber, orderId))
+                .isInstanceOf(BadRequestException.class);
+    }
+
+    @Test
+    @DisplayName("정상 주문시, 정상적으로 메세지를 발행해야 한다.")
+    void success_order() {
+        // given
+        Long orderUserNumber = r.nextLong(1, 100);
+        String orderId = UUID.randomUUID().toString();
+        OrderEntity mock = createMockBean(orderUserNumber, OrderStatus.RESERVED);
+
+        // when
+        when(orderRepository.findById(orderId))
+                .thenReturn(Optional.ofNullable(mock));
+        String orderIdResult = orderService.order(orderUserNumber, orderId);
+
+        // then
+        assertEquals(orderId, orderIdResult);
+        verify(orderProducerService, times(1))
+                .publish(eq(orderId), eq(ORDER_PAYED), any(OrderPayedEvent.class));
+    }
+
+    private OrderEntity createMockBean(Long userNumber, OrderStatus status) {
+        OrderEntity orderEntity = mock(OrderEntity.class);
+        when(orderEntity.getStatus())
+                .thenReturn(status);
+        when(orderEntity.getUserNumber())
+                .thenReturn(userNumber);
+
+        return orderEntity;
+    }
+
+    @Transactional
+    void createStubOrder() {
+
     }
 }
