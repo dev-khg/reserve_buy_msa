@@ -9,6 +9,7 @@ import hg.reserve_buy.commonredis.lock.RedisKey;
 import hg.reserve_buy.commonservicedata.exception.InternalServerException;
 import hg.reserve_buy.orderserviceapi.core.entity.OrderEntity;
 import hg.reserve_buy.orderserviceapi.core.entity.OrderStatus;
+import hg.reserve_buy.orderserviceapi.core.repository.KeyValueStorage;
 import hg.reserve_buy.orderserviceapi.core.repository.OrderRepository;
 import hg.reserve_buy.orderserviceapi.infrastructure.batch.StockScheduler;
 import lombok.RequiredArgsConstructor;
