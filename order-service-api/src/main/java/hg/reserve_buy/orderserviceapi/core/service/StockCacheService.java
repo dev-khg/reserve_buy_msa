@@ -8,6 +8,8 @@ import hg.reserve_buy.orderserviceapi.core.repository.KeyValueStorage;
 import hg.reserve_buy.orderserviceapi.external.StockFeignClient;
 import hg.reserve_buy.orderserviceapi.infrastructure.redis.RedisExecutor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -24,11 +26,9 @@ public class StockCacheService {
     public void reserveStock(String orderId, Long itemNumber, Integer count) {
         String key = RedisKey.REDIS_STOCK_PREFIX + itemNumber;
 
-        if(!redisExecutor.containsKey(key)) {
+        if (!redisExecutor.containsKey(key)) {
             stockAdapter.refreshCacheAndGet(itemNumber);
         }
-
-        Optional<Integer> value = redisExecutor.getValue(key);
 
         Boolean success
                 = redisExecutor.executeTemplate(RedisTimeDealScripts.reserveOrderScript, List.of(key), count);
@@ -43,6 +43,7 @@ public class StockCacheService {
 
     @Component
     @RequiredArgsConstructor
+    @Slf4j
     static class StockAdapter {
         private final KeyValueStorage<String, Integer> keyValueStorage;
         private final StockFeignClient stockFeignClient;
@@ -53,9 +54,10 @@ public class StockCacheService {
             Integer stock = keyValueStorage.getValue(key).orElse(null);
 
             if (stock == null) {
+                log.info("refresh {}", itemNumber);
                 stock = stockFeignClient.getStockCache(itemNumber);
+                keyValueStorage.putValue(key, stock, 5, TimeUnit.MINUTES);
             }
-            keyValueStorage.putValue(key, stock, 5, TimeUnit.MINUTES);
 
             return stock;
         }

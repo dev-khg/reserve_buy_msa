@@ -16,8 +16,8 @@ spring:
       default-filters:
         - name: GlobalLoggingFilter
           args:
-            preLogger: true
-            postLogger: true
+            preLogger: false
+            postLogger: false
       routes:
         - id: item-service-api
           uri: lb://ITEM-SERVICE
