@@ -35,9 +35,9 @@ public class InitData implements ApplicationRunner {
         itemService.createItem(new ItemCreateRequest(
                         "테스트용 ",
                         1,
-                        1000,
+                        100,
                         ItemType.TIME_DEAL,
-                        LocalDateTime.now().plusMinutes(1),
+                        LocalDateTime.now(),
                         UUID.randomUUID().toString()
         ));
     }

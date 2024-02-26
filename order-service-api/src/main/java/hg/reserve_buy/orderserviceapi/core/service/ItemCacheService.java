@@ -5,6 +5,7 @@ import hg.reserve_buy.orderserviceapi.core.repository.KeyValueStorage;
 import hg.reserve_buy.orderserviceapi.external.ItemFeignClient;
 import hg.reserve_order.itemserviceevent.api.ItemCacheResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +53,7 @@ public class ItemCacheService {
 
     @Component
     @RequiredArgsConstructor
+    @Slf4j
     static class ItemPriceAdapter {
         private final ItemFeignClient itemFeignClient;
         private final KeyValueStorage<String, Object> keyValueStorage;
@@ -63,6 +65,7 @@ public class ItemCacheService {
 
             if (itemCache == null) {
                 itemCache = itemFeignClient.getItemCache(itemNumber);
+                log.info("refresh item = {}", itemCache);
                 keyValueStorage.putValue(key, itemCache, 10, TimeUnit.MINUTES);
             }
 
