@@ -1,5 +1,7 @@
 package hg.reserve_buy.orderserviceapi.core.service;
 
+import com.example.orderserviceevent.event.OrderExpireEvent;
+import hg.reserve_buy.commonkafka.constant.KafkaTopic;
 import hg.reserve_buy.commonredis.lock.RedisKey;
 import hg.reserve_buy.commonredis.timedeal.RedisTimeDealScripts;
 import hg.reserve_buy.commonservicedata.exception.BadRequestException;

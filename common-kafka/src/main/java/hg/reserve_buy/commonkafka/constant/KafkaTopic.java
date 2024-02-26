@@ -11,6 +11,7 @@ public final class KafkaTopic {
     public final static String ORDER_RESERVED = "ORDER.RESERVED";
     public final static String ORDER_PAYED = "ORDER.PAYED";
     public final static String ORDER_CANCELED = "ORDER.CANCELED";
+    public final static String ORDER_EXPIRED = "ORDER.EXPIRED";
 
     // Publisher : ITEM
     public final static String ITEM_CREATED = "ITEM.CREATED";

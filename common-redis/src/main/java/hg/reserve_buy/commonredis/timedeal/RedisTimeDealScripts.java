@@ -15,6 +15,14 @@ public final class RedisTimeDealScripts {
             "    return false " +
             "end";
 
+    private final static String increaseScript  = "local storedValue = redis.call('GET', KEYS[1]) " +
+            "if storedValue then " +
+            "    redis.call('SET', KEYS[1], tonumber(storedValue) + tonumber(ARGV[1])) " +
+            "end";
+
     public static RedisScript<Boolean> reserveOrderScript
             = new DefaultRedisScript<>(timeDealOrderScript, Boolean.class);
+
+    public static RedisScript<Void> increaseStockScript =
+            new DefaultRedisScript<>(increaseScript, Void.class);
 }

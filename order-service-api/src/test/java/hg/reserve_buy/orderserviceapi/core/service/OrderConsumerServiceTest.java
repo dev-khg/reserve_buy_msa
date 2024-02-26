@@ -1,6 +1,6 @@
 package hg.reserve_buy.orderserviceapi.core.service;
 
-import com.example.orderserviceevent.event.OrderCancelEvent;
+import com.example.orderserviceevent.event.OrderExpireEvent;
 import com.example.orderserviceevent.event.OrderPayedEvent;
 import com.example.orderserviceevent.event.OrderReserveEvent;
 import hg.reserve_buy.orderserviceapi.core.entity.OrderEntity;
@@ -11,7 +11,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -75,12 +74,12 @@ class OrderConsumerServiceTest {
         // given
         OrderReserveEvent event = createMockReserveEvent();
         orderConsumerService.handleOrderReserve(event);
-        OrderCancelEvent orderCancelEvent = new OrderCancelEvent(
+        OrderExpireEvent orderExpireEvent = new OrderExpireEvent(
                 event.getOrderId(), event.getItemNumber(), event.getCount()
         );
 
         // when
-        orderConsumerService.handleOrderCanceled(orderCancelEvent);
+        orderConsumerService.handleOrderCanceled(orderExpireEvent);
 
         // then
         OrderEntity savedEntity = orderRepository.findById(event.getOrderId()).orElseThrow();
