@@ -12,15 +12,23 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 public class StockCacheService {
     private final RedisExecutor redisExecutor;
+    private final StockAdapter stockAdapter;
 
     public void reserveStock(String orderId, Long itemNumber, Integer count) {
         String key = RedisKey.REDIS_STOCK_PREFIX + itemNumber;
+
+        if(!redisExecutor.containsKey(key)) {
+            stockAdapter.refreshCacheAndGet(itemNumber);
+        }
+
+        Optional<Integer> value = redisExecutor.getValue(key);
 
         Boolean success
                 = redisExecutor.executeTemplate(RedisTimeDealScripts.reserveOrderScript, List.of(key), count);
@@ -39,7 +47,7 @@ public class StockCacheService {
         private final KeyValueStorage<String, Integer> keyValueStorage;
         private final StockFeignClient stockFeignClient;
 
-        @DistributionLock(prefix = RedisKey.REDIS_ORDER_STOCK_PREFIX, key = "#itemNumber")
+        @DistributionLock(prefix = RedisKey.ORDER_REDIS_STOCK_CACHE_PREFIX, key = "#itemNumber")
         public Integer refreshCacheAndGet(Long itemNumber) {
             String key = RedisKey.REDIS_STOCK_PREFIX + itemNumber;
             Integer stock = keyValueStorage.getValue(key).orElse(null);
@@ -47,6 +55,7 @@ public class StockCacheService {
             if (stock == null) {
                 stock = stockFeignClient.getStockCache(itemNumber);
             }
+            keyValueStorage.putValue(key, stock, 5, TimeUnit.MINUTES);
 
             return stock;
         }

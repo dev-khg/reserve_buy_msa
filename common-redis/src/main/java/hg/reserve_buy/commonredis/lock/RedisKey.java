@@ -9,6 +9,7 @@ public final class RedisKey {
     public static final String ITEM_JOIN_PREFIX = "ITEM:JOIN:";
     public static final String ORDER_PREFIX = "ORDER:";
     public static final String REDIS_STOCK_PREFIX = "STOCK:";
+    public static final String ORDER_REDIS_STOCK_CACHE_PREFIX = "STOCK:CACHE:";
     public static final String REDIS_ORDER_STOCK_PREFIX = "ORDER:STOCK:";
     public static final String REDIS_ORDER_RESERVE_FORMAT = "ORDER:RESERVE:%s:%s%s"; // orderId, itemNumber, count
 

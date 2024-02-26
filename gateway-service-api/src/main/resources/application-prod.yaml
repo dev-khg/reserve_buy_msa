@@ -33,3 +33,10 @@ spring:
             - Method=GET
           filters:
             - RewritePath=/api/(?<segment>.*), /$\{segment}
+        - id: order-service-api
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/api/order,/api/order/{segment}
+            - Method=POST
+          filters:
+            - RewritePath=/api/(?<segment>.*), /$\{segment}

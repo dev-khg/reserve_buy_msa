@@ -31,6 +31,15 @@ public class InitData implements ApplicationRunner {
         for (ItemCreateRequest itemCreateRequest : itemRequestList) {
             itemService.createItem(itemCreateRequest);
         }
+
+        itemService.createItem(new ItemCreateRequest(
+                        "테스트용 ",
+                        1,
+                        1000,
+                        ItemType.TIME_DEAL,
+                        LocalDateTime.now().plusMinutes(1),
+                        UUID.randomUUID().toString()
+        ));
     }
 
     private ItemCreateRequest createGeneralItem(String name) {
