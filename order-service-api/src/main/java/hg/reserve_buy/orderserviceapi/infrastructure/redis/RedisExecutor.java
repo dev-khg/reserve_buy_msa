@@ -24,6 +24,11 @@ public class RedisExecutor {
         keyValueStorage.putValue(key, value, timeout, timeUnit);
     }
 
+    public boolean containsKey(String key) {
+        Boolean exist = redisTemplate.hasKey(key);
+        return exist != null && exist;
+    }
+
     public <T> T executeTemplate(RedisScript<T> script, List<String> keys, Object arg) {
         return redisTemplate.execute(script, keys, arg);
     }
