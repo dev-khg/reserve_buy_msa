@@ -1,9 +1,7 @@
 package hg.reserve_buy.stockserviceapi.core.service;
 
-import com.example.orderserviceevent.event.OrderCancelEvent;
+import com.example.orderserviceevent.event.OrderExpireEvent;
 import com.example.orderserviceevent.event.OrderPayedEvent;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import hg.reserve_buy.stockserviceapi.core.entity.StockEntity;
 import hg.reserve_buy.stockserviceapi.core.repository.StockRepository;
 import hg.reserve_order.itemserviceevent.event.ItemCreatedEvent;
@@ -11,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,8 +29,8 @@ public class StockConsumerService {
     }
 
     @KafkaListener(topics = ORDER_CANCELED, groupId = GROUP_ID, containerFactory = "kafkaContainerFactory")
-    public void handleOrderCanceled(ConsumerRecord<String, OrderCancelEvent> event) {
-        OrderCancelEvent value = event.value();
+    public void handleOrderCanceled(ConsumerRecord<String, OrderExpireEvent> event) {
+        OrderExpireEvent value = event.value();
         stockService.increaseStockByItemNumber(value.getItemNumber(), value.getCount());
     }
 

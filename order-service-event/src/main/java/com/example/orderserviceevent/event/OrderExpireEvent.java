@@ -6,7 +6,7 @@ import lombok.*;
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class OrderCancelEvent {
+public class OrderExpireEvent {
     private String orderId;
     private Long itemNumber;
     private Integer count;
