@@ -6,6 +6,7 @@ import hg.reserve_buy.commonredis.lock.DistributionLock;
 import hg.reserve_buy.commonredis.lock.RedisKey;
 import hg.reserve_buy.commonredis.timedeal.RedisTimeDealScripts;
 import hg.reserve_buy.commonservicedata.exception.BadRequestException;
+import hg.reserve_buy.orderserviceapi.core.entity.OrderEntity;
 import hg.reserve_buy.orderserviceapi.core.repository.KeyValueStorage;
 import hg.reserve_buy.orderserviceapi.external.StockFeignClient;
 import hg.reserve_buy.orderserviceapi.infrastructure.kafka.OrderProducerService;
@@ -13,6 +14,7 @@ import hg.reserve_buy.orderserviceapi.infrastructure.redis.RedisExecutor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.KeyExpirationEventMessageListener;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Component;
@@ -26,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 public class StockCacheService {
     private final RedisExecutor redisExecutor;
     private final StockAdapter stockAdapter;
+    private final RedisTemplate<String, Integer> redisTemplate;
 
     public void reserveStock(String orderId, Long itemNumber, Integer count) {
         String key = RedisKey.REDIS_STOCK_PREFIX + itemNumber;
@@ -48,6 +51,13 @@ public class StockCacheService {
     public void increaseStock(Long itemNumber, Integer count) {
         String key = RedisKey.REDIS_STOCK_PREFIX + itemNumber;
         redisExecutor.executeTemplate(RedisTimeDealScripts.increaseStockScript, List.of(key), count);
+    }
+
+    public void removeStockReserve(OrderEntity orderEntity) {
+        String reserveKey
+                = String.format(RedisKey.REDIS_ORDER_RESERVE_FORMAT, orderEntity.getOrderId(), orderEntity.getItemNumber(),orderEntity.getCount());
+
+        redisTemplate.unlink(reserveKey);
     }
 
     @Slf4j

@@ -45,6 +45,8 @@ public class OrderEntity {
     }
 
     public void changeStatus(OrderStatus status) {
-        this.status = status;
+        if (status != PAYED) {
+            this.status = status;
+        }
     }
 }
