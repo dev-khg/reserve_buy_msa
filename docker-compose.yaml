@@ -1,0 +1,212 @@
+version : '3.9'
+services :
+
+# ----------- SERVER ------------
+  eureka-server:
+    build:
+      context: ./eureka-service
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - reserve_buy.env
+    networks:
+      - shop-network
+    ports:
+      - '8761:8761'
+    healthcheck:
+      test: "curl --fail --silent localhost:8761/actuator/health | grep UP || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+  gateway-server:
+    build:
+      context: ./gateway-service-api
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - reserve_buy.env
+    networks:
+      - shop-network
+    healthcheck:
+      test: "curl --fail --silent localhost:8000/actuator/health | grep UP || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+    ports:
+      - '8000:8000'
+
+  item-server:
+    build:
+      context: ./item-service-api
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - reserve_buy.env
+    networks:
+      - shop-network
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+    depends_on:
+      item-mysql:
+        condition: service_healthy
+      stock-server:
+        condition: service_healthy
+
+  order-server:
+    build:
+      context: ./order-service-api
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - reserve_buy.env
+    networks:
+      - shop-network
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+    depends_on:
+      order-mysql:
+        condition: service_healthy
+
+  stock-server:
+    build:
+      context: ./stock-service-api
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - reserve_buy.env
+    networks:
+      - shop-network
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+    depends_on:
+      stock-mysql:
+        condition: service_healthy
+
+# ------------ MYSQL ------------
+  item-mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root1234
+      MYSQL_DATABASE: item-db
+      MYSQL_USER: sa
+      MYSQL_PASSWORD: 1234
+    ports:
+      - '3306:3306'
+    restart: always
+    networks:
+      - shop-network
+    healthcheck:
+      test: [ "CMD", "mysql", "-h", "item-mysql", "-u", "sa", "-p1234", "-e", "SELECT 1" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  order-mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root1234
+      MYSQL_DATABASE: order-db
+      MYSQL_USER: sa
+      MYSQL_PASSWORD: 1234
+    ports:
+      - '3307:3306'
+    restart: always
+    networks:
+      - shop-network
+    healthcheck:
+      test: [ "CMD", "mysql", "-h", "order-mysql", "-u", "sa", "-p1234", "-e", "SELECT 1" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  stock-mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root1234
+      MYSQL_DATABASE: stock-db
+      MYSQL_USER: sa
+      MYSQL_PASSWORD: 1234
+    ports:
+      - '3308:3306'
+    restart: always
+    networks:
+      - shop-network
+    healthcheck:
+      test: [ "CMD", "mysql", "-h", "stock-mysql", "-u", "sa", "-p1234", "-e", "SELECT 1" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+# ------------ REDIS ------------
+  redis-lock:
+    image: redis:latest
+    restart: always
+    ports:
+      - '6379:6379'
+    networks:
+      - shop-network
+  redis-item-price-cache:
+    image: redis:latest
+    restart: always
+    ports:
+      - '6380:6379'
+    networks:
+      - shop-network
+  redis-time-deal:
+    image: redis:latest
+    restart: always
+    ports:
+      - '6381:6379'
+    networks:
+      - shop-network
+  redis-stock-cache:
+    image: redis:latest
+    restart: always
+    ports:
+      - '6382:6379'
+    networks:
+      - shop-network
+
+
+
+  # ------------ KAFKA ------------
+  zookeeper:
+    platform: linux/amd64
+    image: wurstmeister/zookeeper:3.4.6
+    ports:
+      - "2181:2181"
+    networks:
+      - shop-network
+  kafka-service:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+    environment:
+#      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+      KAFKA_ADVERTISED_HOST_NAME: kafka-service
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      AUTO_CREATE_TOPICS: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - shop-network
+    depends_on:
+      - zookeeper
+networks:
+  shop-network:
+    driver: bridge

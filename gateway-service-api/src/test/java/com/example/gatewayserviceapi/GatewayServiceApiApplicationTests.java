@@ -1,10 +1,10 @@
-package hg.reserve_buy.itemserviceapi;
+package com.example.gatewayserviceapi;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ItemServiceApiApplicationTests {
+class GatewayServiceApiApplicationTests {
 
     @Test
     void contextLoads() {

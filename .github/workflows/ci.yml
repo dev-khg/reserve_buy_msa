@@ -9,9 +9,9 @@ name: CI Test
 
 on:
   push:
-    branches: [ "main", "dev", "feat"]
+    branches: [ "main", "dev", "feature"]
   pull_request:
-    branches: [ "main", "dev", "feat"]
+    branches: [ "main", "dev", "feature"]
 
 
 permissions:
@@ -21,6 +21,28 @@ jobs:
   build:
     name: Build and Test
     runs-on: ubuntu-latest
+
+    services:
+      redis-lock:
+        image: redis
+        ports:
+          - 6379:6379
+        options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 3
+      redis-price-cache:
+        image: redis
+        ports:
+          - 6380:6379
+        options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 3
+      redis-time-deal:
+        image: redis
+        ports:
+          - 6381:6379
+        options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 3
+      redis-stock-cache:
+        image: redis
+        ports:
+          - 6382:6379
+        options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 3
 
     steps:    
       - uses: actions/checkout@v2

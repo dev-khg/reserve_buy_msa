@@ -1,4 +1,12 @@
 rootProject.name = 'reserve_buy'
 
-include 'item-service-api'
 include 'common-service-data'
+include 'common-kafka'
+include 'common-redis'
+include 'item-service-api'
+include 'item-service-event'
+include 'order-service-api'
+include 'order-service-event'
+include 'stock-service-api'
+include 'eureka-service'
+include 'gateway-service-api'
