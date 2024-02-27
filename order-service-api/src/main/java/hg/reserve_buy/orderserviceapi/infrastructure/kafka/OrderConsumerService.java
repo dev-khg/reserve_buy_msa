@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static hg.reserve_buy.commonkafka.constant.KafkaTopic.*;
 
@@ -28,6 +29,7 @@ public class OrderConsumerService {
 //    private final StockScheduler stockScheduler;
 
     @KafkaListener(topics = ORDER_RESERVED, groupId = GROUP_ID, containerFactory = "kafkaContainerFactory")
+    @Transactional
     public void handleOrderReserve(OrderReserveEvent event) {
         OrderEntity orderEntity = createOrderEntity(event);
         orderRepository.save(orderEntity);
