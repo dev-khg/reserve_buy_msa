@@ -56,6 +56,8 @@ public class OrderServiceImpl implements OrderService {
             throw new BadRequestException("이미 결제되었거나 취소된 주문입니다.");
         }
 
+        stockCacheService.removeStockReserve(orderEntity);
+
         OrderPayedEvent orderPayedEvent
                 = new OrderPayedEvent(orderId, orderEntity.getItemNumber(), orderEntity.getCount());
         orderProducerService.publish(orderId, ORDER_PAYED, orderPayedEvent);
