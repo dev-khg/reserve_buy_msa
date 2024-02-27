@@ -1,0 +1,22 @@
+dependencies {
+    implementation project(':common-service-data')
+    implementation project(':common-redis')
+    implementation project(':common-kafka')
+    implementation project(':order-service-event')
+    implementation project(':item-service-event')
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    implementation 'org.springframework.kafka:spring-kafka'
+
+    implementation 'org.redisson:redisson-spring-boot-starter:3.17.4'
+
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    testRuntimeOnly 'com.h2database:h2'
+}

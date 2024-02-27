@@ -1,0 +1,42 @@
+server:
+  port: 8000
+
+eureka:
+  client:
+    registry-fetch-interval-seconds: 10
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${DISCOVERY_SERVER_URL}
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      default-filters:
+        - name: GlobalLoggingFilter
+          args:
+            preLogger: false
+            postLogger: false
+      routes:
+        - id: item-service-api
+          uri: lb://ITEM-SERVICE
+          predicates:
+            - Path=/api/item,/api/item/{segment}
+            - Method=GET
+          filters:
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
+        - id: stock-service-api
+          uri: lb://STOCK-SERVICE
+          predicates:
+            - Path=/api/stock/{segment}
+            - Method=GET
+          filters:
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
+        - id: order-service-api
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/api/order,/api/order/{segment}
+            - Method=POST
+          filters:
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
