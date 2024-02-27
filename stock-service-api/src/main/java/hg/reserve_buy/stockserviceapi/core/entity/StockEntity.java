@@ -30,11 +30,14 @@ public class StockEntity {
     }
 
     public void increaseStock(Integer count) {
-        this.total += count;
+        if (total != null) {
+            this.total += count;
+        }
     }
 
     public void decreaseStock(Integer count) {
-        if(total - count < 0) {
+        if(total == null) return;
+        if (total - count < 0) {
             throw new BadRequestException("재고가 충분하지 않습니다.");
         }
         this.total -= count;
