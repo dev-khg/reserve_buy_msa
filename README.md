@@ -36,6 +36,8 @@
 <br/><br/>
 <a href="https://velog.io/@knhng/MSA-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%EC%84%A0%EC%B0%A9%EC%88%9C-%EA%B5%AC%EB%A7%A4-%EC%84%9C%EB%B2%84-2.-%EC%B9%B4%ED%94%84%EC%B9%B4-%ED%99%9C%EC%9A%A9">#2 카프카를 활용하여 TPS 높이기</a>
 
+<a href="https://velog.io/@knhng/MSA-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%EC%84%A0%EC%B0%A9%EC%88%9C-%EA%B5%AC%EB%A7%A4-%EC%84%9C%EB%B2%84-3.-%EA%B0%80%EC%83%81-%EC%8A%A4%EB%A0%88%EB%93%9C%EC%97%90-%EB%8C%80%ED%95%9C-%EA%B3%A0%EC%B0%B0-s8yf859w">#3 가상 스레드에 대한 고찰</a>
+
 <details>
 <summary>가상 스레드 적용 & 테스트 결과 (+ 성능향상을 위해 가상스레드를 사용했지만 롤백한 이유)</summary>
 
